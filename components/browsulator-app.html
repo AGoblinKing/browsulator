@@ -1,0 +1,77 @@
+<link rel="import" href="browsulator-card.html">
+<link rel="import" href="browsulator-emulator.html">
+<polymer-element name="browsulator-app">
+    <template>
+        <style>
+            :host {
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+                display: block;
+                background-color: #222;
+                color: white;
+                cursor: pointer;
+            }
+            .title { text-align: center; width: 100%; }
+            h1 { font-size: 10vh; text-shadow: 0.05em 0.05em 0 #000; margin: 0.1em;}
+            h2 { font-size: 3vh; text-shadow: 0.1em 0.1em 0 #000; }
+            
+            #cards { background-color: #111; float: left; display: flex; width: 100vw; height: 100vh; flex-direction: column; align-content: center; justify-content:center; transition: margin 1s;}
+            .cardRow { flex: 1; display: flex; transition: opacity 1s;}
+            .card {
+                flex: 1;
+                border: 1px solid black;
+            }
+            :host.emulator #cards { 
+                margin-left: -98vw; 
+            }
+            :host.emulator .cardRow {
+                opacity: 0;
+                pointer-events: none;
+            }
+            #emulator { 
+                width: 98vw;
+                height: 100vh;
+            }
+        </style>
+        <!--
+        <div class="title">
+            <h1>Browsulator</h1>
+            <h2>Multiplayer Emulators</h2>
+        </div> -->
+        <div id="cards">
+            <template repeat="{{row in emulators}}">
+                <div class="cardRow">
+                <template repeat="{{emulator in row}}">
+                    <browsulator-card class="card" emulator="{{emulator}}"></browsulator-card>
+                </template>
+                </div>
+            </template>
+        </div>
+        <div id="emulator">
+            <browsulator-emulator type="{{emulator}}"></browsulator-emulator>
+        </div>
+    </template>
+    <script>
+        Polymer("browsulator-app", {
+            emulators : [
+                ["Super Nintendo", "Sega Genesis", "NES"],
+                ["Arcade", "Browsulator", "GameBoy Advance"],
+                ["Neo Geo", "Nintendo 64", "GameBoy Color"]
+            ],
+            ready: function() {
+                this.$.cards.addEventListener("click", this.checkToggle.bind(this));
+            },
+            checkToggle : function() {
+                if(this.emulator) {
+                    this.classList.remove("emulator");
+                    this.emulator = undefined;
+                }
+            },
+            changeEmulator: function(emulator) {
+                this.classList.add("emulator");
+                this.emulator = emulator;
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,0 +1,65 @@
+<polymer-element name="browsulator-card" attributes="emulator">
+    <template>
+        <style>
+            :host {
+                width: 100%;
+                height: 100%;
+                display: block;
+                overflow: hidden;
+                cursor: pointer;
+                background-color: black;
+            }
+            .overlay { position: absolute; z-index: 2; pointer-events: none;}
+            .name { text-shadow: 5px 5px 0px #000; font-size: 5vh;}
+            .big { font-size: 8vh; }
+        </style>
+
+        <div class="overlay">
+            <div class="name {{addclass}}">{{emulator}}</div>
+            <br/><br/>
+            <div class="name">{{secondary}}</div>
+        </div>
+        <img class="bg" width="100%" src="{{backgroundImage}}">
+
+    </template>
+    <script>
+        Polymer("browsulator-card", {
+            graphic: 0,
+            ready: function() {
+                this.addEventListener("click", this.clicked.bind(this));    
+            },
+            clicked: function() {
+                setTimeout(function() {
+                    document.body.querySelector("browsulator-app").changeEmulator(this.emulator);
+                }.bind(this), 0);
+            },
+            emulatorChanged: function() {
+                if(this.emulator != "Browsulator") {
+                    var req = new XMLHttpRequest(), 
+                        self = this;
+
+                    req.onload = function() {
+                        self.graphics = JSON.parse(this.responseText).data;
+                        self.graphic = Math.floor(Math.random() * self.graphics.length);
+                        self.changeGraphic();
+                    }   
+                    req.open("get", "http://api.giphy.com/v1/gifs/search?q={{emu}}&api_key=dc6zaTOxFJmzC".replace("{{emu}}", this.emulator));
+                    req.send();
+                } else {
+                    this.addclass = "big";
+                    this.secondary = "Multiplayer Emulators";
+                }
+            },
+            changeGraphic: function() {
+                this.graphic++;
+                if(this.graphic >= this.graphics.length) {
+                    this.graphic = 0;
+                }
+                this.backgroundImage = this.graphics[this.graphic].images.fixed_height.url;
+                setTimeout(this.changeGraphic.bind(this), 3000 + Math.random()*5000);
+            },
+            backgroundImage: "images/static.gif" 
+        });
+    </script>
+
+</polymer-element>
