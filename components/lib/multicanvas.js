@@ -77,7 +77,9 @@ var MultiCanvas = (function() {
                     default:
                         oEvent = new Event(options.type, options);
                 }
-                element.dispatchEvent(oEvent);
+                
+                // polymer you suck
+                element.dispatchEvent_(oEvent);
 
                 return element;
             };

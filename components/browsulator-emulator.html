@@ -45,7 +45,7 @@
                 SNES._mainloop(0);
             },
             start : function() {
-                this.mc.host(1000/24).events(document);
+                this.mc.host(1000/24).events(unwrap(document));
                 this.reboot = SNES.cwrap("reboot_emulator", "number", ["string"]);
                 this.reboot("/_.smc");
                 this.last_time = (new Date()).getTime();
@@ -88,7 +88,7 @@
                 this.$.emuMain.width = (this.$.emuMain.clientHeight / this.$.target.height) * this.$.target.width;    
             },
             connect : function() {
-                this.mc.connect(this.$.remoteHost.value).events(document, ["keypress", "keydown", "keyup"]);
+                this.mc.connect(this.$.remoteHost.value).events(unwrap(document), ["keypress", "keydown", "keyup"]);
                 this.resize();
             },
             typeChanged: function() {
