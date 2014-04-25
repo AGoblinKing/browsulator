@@ -84,7 +84,7 @@ var MultiCanvas = (function() {
         } ());
 
     return function(canvas) {
-        var peer = new Peer(Math.floor(Math.random() * 50), { key : "x87ju7n4u66layvi" }),
+        var peer = new Peer(null, { host: "64.187.160.30", port: 9090, key : "peerjs" }),
             conns = {},
             host = false,
             lossless = false,
