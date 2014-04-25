@@ -13,12 +13,13 @@
             #target { flex: 1; }
             #emuMain { background: rgb(17, 17, 17); border-left: 1px solid black; border-right: 1px solid black; transition: width .5s; width: 0px; display: flex;}
             .controls { background: rgb(17, 17, 17); display: flex; }
+            .playerControls { flex: 1; }
             .hidden { display: none; }
         </style>
         <div class="main">
             <div class="spanner"></div>
             <div id="emuMain">
-                <canvas id="target"></canvas>
+                <canvas id="target" width="256" height="239"></canvas>
             </div>
             <div class="ad"></div>
         </div>
@@ -30,6 +31,8 @@
             </div>
             <div class="socialControls">
                 {{hostId}}
+                <input type="text" id="remoteHost" placeholder="HostId of friend"/>
+                <button on-click="{{connect}}">Connect</button>
             </div>
         </div>
     </template>
@@ -46,8 +49,9 @@
                 this.reboot = SNES.cwrap("reboot_emulator", "number", ["string"]);
                 this.reboot("/_.smc");
                 this.last_time = (new Date()).getTime();
+                
                 SNES._mainloop(0);
-                this.$.emuMain.width = (this.$.emuMain.clientHeight / this.$.target.height) * this.$.target.width;
+                this.resize();
                 this.interval = setInterval(this.mainLoop.bind(this), 0);
             },
             loadRom : function() { this.$.file.click(); },
@@ -72,6 +76,13 @@
                     self.hostId = id;
                 });
                 
+            },
+            resize : function() {
+                this.$.emuMain.width = (this.$.emuMain.clientHeight / this.$.target.height) * this.$.target.width;    
+            },
+            connect : function() {
+                this.mc.connect(this.$.remoteHost.value).events(document, ["keypress", "keydown", "keyup"]);
+                this.resize();
             },
             typeChanged: function() {
                 if(this.type) {
