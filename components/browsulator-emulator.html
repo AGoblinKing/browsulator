@@ -1,3 +1,7 @@
+<script src="lib/xnes9x.js"></script>
+<script src="lib/peer.js"></script>
+<script src="lib/multicanvas.js"></script>
+
 <polymer-element name="browsulator-emulator" attributes="type">
     <template>
         <style>
@@ -10,8 +14,10 @@
             .main { flex: 1; display: flex; }
             .spanner, .ad { flex: 1; }
             #emuMain.on { width: 500px;}
-            #emuMain { background: rgb(17, 17, 17); border-left: 1px solid black; border-right: 1px solid black; transition: width .5s; width: 0px;}
-            .controls { height: 5vh; background: rgb(17, 17, 17); }
+            #target { flex: 1; }
+            #emuMain { background: rgb(17, 17, 17); border-left: 1px solid black; border-right: 1px solid black; transition: width .5s; width: 0px; display: flex;}
+            .controls { height: 5vh; background: rgb(17, 17, 17); display: flex; }
+            .hidden { display: none; }
         </style>
         <div class="main">
             <div class="spanner"></div>
@@ -22,31 +28,63 @@
         </div>
         <div class="controls">
             <div class="emuControls">
+                <input id="file" class="hidden" type="file" accept=".smc" on-change="{{readRom}}" /><button on-click="{{loadRom}}">Load Rom</button>
             </div>
             <div class="playerControls">
             </div>
             <div class="socialControls">
+                {{hostId}}
             </div>
         </div>
     </template>
     <script>
         Polymer("browsulator-emulator", {
-            startup: function() {
-                    
+            mainLoop : function() {
+                SNES._mainloop(0);
+            },
+            start : function() {
+                this.mc.host(1000/24).events(document);
+                this.reboot = SNES.cwrap("reboot_emulator", "number", ["string"]);
+                this.reboot("/_.smc");
+                this.last_time = (new Date()).getTime();
+                this.interval = setInterval(this.mainLoop.bind(this), 0);
+            },
+            loadRom : function() { this.$.file.click(); },
+            readRom : function(e) {
+                var reader = new FileReader(e.target),
+                    self = this;
+
+                reader.onload = function() {
+                    SNES.FS_createDataFile("/", "_.smc", new Uint8Array(this.result), true, true);
+                    self.start();
+                };
+
+                reader.readAsArrayBuffer(e.target.files[0]);    
+            },
+            ready: function() {
+                var self = this;
+                this.mc = MultiCanvas(this.$.target);
+                
+                SNES.setTarget(this.$.target);
+                
+                this.mc.peer.on("open", function(id) {
+                    console.log(id);
+                    self.hostId = id;
+                });
+                
             },
             typeChanged: function() {
                 if(this.type) {
                     setTimeout(function() {
                         this.$.emuMain.classList.add("on");
                     }.bind(this), 500);
-                    
-                    // okay
-                    this.startup();
                 } else {
+                    clearInterval(this.interval);
                     this.$.emuMain.classList.remove("on");
                 }
             }
         });
+
     </script>
 
 </polymer-element>
