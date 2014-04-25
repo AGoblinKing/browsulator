@@ -13,7 +13,7 @@
             }
             .main { flex: 1; display: flex; }
             .spanner, .ad { flex: 1; }
-            #emuMain.on { width: 500px;}
+            #emuMain.on { width: 50vw; }
             #target { flex: 1; }
             #emuMain { background: rgb(17, 17, 17); border-left: 1px solid black; border-right: 1px solid black; transition: width .5s; width: 0px; display: flex;}
             .controls { height: 5vh; background: rgb(17, 17, 17); display: flex; }
@@ -47,6 +47,8 @@
                 this.reboot = SNES.cwrap("reboot_emulator", "number", ["string"]);
                 this.reboot("/_.smc");
                 this.last_time = (new Date()).getTime();
+                SNES._mainloop(0);
+                this.$.emuMain.width = (this.$.emuMain.clientHeight / this.$.target.height) * this.$.target.width;
                 this.interval = setInterval(this.mainLoop.bind(this), 0);
             },
             loadRom : function() { this.$.file.click(); },
@@ -68,7 +70,6 @@
                 SNES.setTarget(this.$.target);
                 
                 this.mc.peer.on("open", function(id) {
-                    console.log(id);
                     self.hostId = id;
                 });
                 
