@@ -15,5 +15,8 @@
   ],
   "dependencies": {
     "polymer": "~0.2.2"
+  },
+  "resolutions": {
+    "platform": "0.2.3"
   }
 }
