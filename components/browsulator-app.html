@@ -59,6 +59,9 @@
             ],
             ready: function() {
                 this.$.cards.addEventListener("click", this.checkToggle.bind(this));
+                if(document.location.hash) {
+                    this.changeEmulator("Super Nintendo");    
+                }
             },
             checkToggle : function() {
                 if(this.emulator) {

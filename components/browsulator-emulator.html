@@ -31,7 +31,7 @@
             </div>
             <div class="socialControls">
                 {{hostId}}
-                <input type="text" id="remoteHost" placeholder="HostId of friend"/>
+                <input type="text" id="remoteHost" placeholder="HostId of friend" value="{{remoteHost}}"/>
                 <button on-click="{{connect}}">Connect</button>
             </div>
         </div>
@@ -74,6 +74,13 @@
                 
                 this.mc.peer.on("open", function(id) {
                     self.hostId = id;
+                    if(document.location.hash == "") {
+                        document.location.hash = id; 
+                    } else {
+                        self.remoteHost = document.location.hash.substr(1);
+                        setTimeout(function() { self.connect(); }, 500);
+                    }
+                    
                 });
                 
             },
