@@ -53,9 +53,9 @@
     <script>
         Polymer("browsulator-app", {
             emulators : [
-                ["Super Nintendo", "Coming Soon", "Coming Soon"],
-                ["Coming Soon", "Browsulator", "Coming Soon"],
-                ["Coming Soon", "Coming Soon", "Coming Soon"]
+                ["Super Nintendo", "", ""],
+                ["", "Browsulator", ""],
+                ["", "", ""]
             ],
             ready: function() {
                 this.$.cards.addEventListener("click", this.checkToggle.bind(this));
@@ -67,7 +67,7 @@
                 }
             },
             changeEmulator: function(emulator) {
-                if(["Browsulator", "Coming Soon"].indexOf(emulator) === -1) {
+                if(["Browsulator", ""].indexOf(emulator) === -1) {
                    this.classList.add("emulator");
                    this.emulator = emulator; 
                 }
