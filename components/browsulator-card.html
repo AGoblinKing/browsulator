@@ -2,24 +2,22 @@
     <template>
         <style>
             :host {
-                width: 100%;
-                height: 100%;
-                display: block;
+                flex: 1;
+                display: flex;
                 overflow: hidden;
                 cursor: pointer;
                 background-color: black;
             }
-            .overlay { position: absolute; z-index: 2; pointer-events: none;}
-            .name { text-shadow: 5px 5px 0px #000; font-size: 2vw;}
+            
+            .cardHolder { flex: 1; display: flex; flex-direction: column; background-size: cover; text-shadow: 5px 5px 0px #000; font-size: 2%; text-align: center; box-shadow: inset 0 0 10px #000000; }
+            .cardHolder:hover { box-shadow: inset 0 0 15px #FFFFFF; }
+            .spanner { flex: 1; }
         </style>
-
-        <div class="overlay">
-            <div class="name {{addclass}}">{{emulator}}</div>
-            <br/><br/>
-            <div class="name">{{secondary}}</div>
+        <div class="cardHolder" style="background-image: url({{backgroundImage}});">
+            <h2>{{emulator}}</h2>
+            <div class="spanner"></div>
+            <h2>{{secondary}}</h2>
         </div>
-        <img class="bg" width="100%" src="{{backgroundImage}}">
-
     </template>
     <script>
         Polymer("browsulator-card", {
@@ -33,21 +31,24 @@
                 }.bind(this), 0);
             },
             emulatorChanged: function() {
-                if(this.emulator != "Browsulator") {
-                    var req = new XMLHttpRequest(), 
-                        self = this;
+                switch(this.emulator) {
+                    case "Coming Soon": break;
+                    case "Browsulator":
+                        this.secondary = "< Select Boss >";
+                        break;
+                    default: 
+                        var req = new XMLHttpRequest(), 
+                            self = this;
 
-                    req.onload = function() {
-                        self.graphics = JSON.parse(this.responseText).data;
-                        self.graphic = Math.floor(Math.random() * self.graphics.length);
-                        self.changeGraphic();
-                    }   
-                    req.open("get", "http://api.giphy.com/v1/gifs/search?q={{emu}}&api_key=dc6zaTOxFJmzC".replace("{{emu}}", this.emulator));
-                    req.send();
-                } else {
-                    this.addclass = "big";
-                    this.secondary = "Multiplayer Emulators";
-                }
+                        req.onload = function() {
+                            self.graphics = JSON.parse(this.responseText).data;
+                            self.graphic = Math.floor(Math.random() * self.graphics.length);
+                            self.changeGraphic();
+                        }   
+                        req.open("get", "http://api.giphy.com/v1/gifs/search?q={{emu}}&api_key=dc6zaTOxFJmzC".replace("{{emu}}", this.emulator));
+                        req.send();
+                } 
+                  
             },
             changeGraphic: function() {
                 this.graphic++;

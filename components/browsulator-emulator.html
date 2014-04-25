@@ -1,0 +1,52 @@
+<polymer-element name="browsulator-emulator" attributes="type">
+    <template>
+        <style>
+            :host {
+                flex: 1;
+                display: flex;
+                overflow: hidden;
+                flex-direction: column;
+            }
+            .main { flex: 1; display: flex; }
+            .spanner, .ad { flex: 1; }
+            #emuMain.on { width: 500px;}
+            #emuMain { background: rgb(17, 17, 17); border-left: 1px solid black; border-right: 1px solid black; transition: width .5s; width: 0px;}
+            .controls { height: 5vh; background: rgb(17, 17, 17); }
+        </style>
+        <div class="main">
+            <div class="spanner"></div>
+            <div id="emuMain">
+                <canvas id="target"></canvas>
+            </div>
+            <div class="ad"></div>
+        </div>
+        <div class="controls">
+            <div class="emuControls">
+            </div>
+            <div class="playerControls">
+            </div>
+            <div class="socialControls">
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer("browsulator-emulator", {
+            startup: function() {
+                    
+            },
+            typeChanged: function() {
+                if(this.type) {
+                    setTimeout(function() {
+                        this.$.emuMain.classList.add("on");
+                    }.bind(this), 500);
+                    
+                    // okay
+                    this.startup();
+                } else {
+                    this.$.emuMain.classList.remove("on");
+                }
+            }
+        });
+    </script>
+
+</polymer-element>

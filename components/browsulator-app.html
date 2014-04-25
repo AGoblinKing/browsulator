@@ -16,8 +16,8 @@
             h1 { font-size: 10vh; text-shadow: 0.05em 0.05em 0 #000; margin: 0.1em;}
             h2 { font-size: 3vh; text-shadow: 0.1em 0.1em 0 #000; }
             
-            #cards { background-color: #111; float: left; display: flex; width: 100vw; height: 100vh; flex-direction: column; align-content: center; justify-content:center; transition: margin 1s;}
-            .cardRow { flex: 1; display: flex; transition: opacity 1s;}
+            #cards { background-color: #111; float: left; display: flex; width: 100vw; height: 100vh; flex-direction: column; align-content: center; justify-content:center; transition: margin 0.5s;}
+            .cardRow { flex: 1; display: flex; transition: opacity 0.2s;}
             .card {
                 flex: 1;
                 border: 1px solid black;
@@ -48,16 +48,14 @@
                 </div>
             </template>
         </div>
-        <div id="emulator">
-            <browsulator-emulator type="{{emulator}}"></browsulator-emulator>
-        </div>
+        <browsulator-emulator id="emulator" type="{{emulator}}"></browsulator-emulator>
     </template>
     <script>
         Polymer("browsulator-app", {
             emulators : [
-                ["Super Nintendo", "Sega Genesis", "NES"],
-                ["Arcade", "Browsulator", "GameBoy Advance"],
-                ["Neo Geo", "Nintendo 64", "GameBoy Color"]
+                ["Super Nintendo", "Coming Soon", "Coming Soon"],
+                ["Coming Soon", "Browsulator", "Coming Soon"],
+                ["Coming Soon", "Coming Soon", "Coming Soon"]
             ],
             ready: function() {
                 this.$.cards.addEventListener("click", this.checkToggle.bind(this));
@@ -65,12 +63,14 @@
             checkToggle : function() {
                 if(this.emulator) {
                     this.classList.remove("emulator");
-                    this.emulator = undefined;
+                    this.emulator = "";
                 }
             },
             changeEmulator: function(emulator) {
-                this.classList.add("emulator");
-                this.emulator = emulator;
+                if(["Browsulator", "Coming Soon"].indexOf(emulator) === -1) {
+                   this.classList.add("emulator");
+                   this.emulator = emulator; 
+                }
             }
         });
     </script>
