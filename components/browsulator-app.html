@@ -53,9 +53,9 @@
     <script>
         Polymer("browsulator-app", {
             emulators : [
-                ["Super Nintendo", "", ""],
-                ["", "Browsulator", ""],
-                ["", "", ""]
+                ["Super Nintendo", "Genesis", "NES"],
+                ["Gameboy", "Browsulator", "N64"],
+                ["VITA", "PSP", "Playstation"]
             ],
             ready: function() {
                 this.$.cards.addEventListener("click", this.checkToggle.bind(this));
